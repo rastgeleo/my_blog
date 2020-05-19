@@ -1,0 +1,16 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+{% with count=posts|length %}
+<p>There {{ count|pluralize:"is,are"}} {{ count }} post{{ count|pluralize }}.</p>
+{% endwith %}
+<ul>
+    {% for post in posts %}
+    <li><a href="{% url 'post' post.id %}">{{ post.title }}</a></li>
+    <a>{{ post.content }}</a>
+    {% empty %}
+    <li>There is no post to show.</li>
+    {% endfor %}
+</ul>
+
+{% endblock content%}
