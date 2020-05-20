@@ -23,5 +23,11 @@ class Post(models.Model):
         on_delete=models.CASCADE
         )
 
+    def abstract(self):
+        if len(self.content) > 50:
+            return self.content[:50] + ' ...'
+        else:
+            return self.content
+
     def __str__(self):
         return self.title

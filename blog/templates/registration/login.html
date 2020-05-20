@@ -1,0 +1,38 @@
+{% extends "blog/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div>
+
+    {% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <!--
+        <table>
+            <tr>
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password.label_tag }}</td>
+                <td>{{ form.password }}</td>
+            </tr>
+        </table>
+        -->
+        {% buttons %}
+        <input type="submit" value="Login" , class="btn btn-primary">
+        {% endbuttons %}
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+</div>
+{% endblock content %}

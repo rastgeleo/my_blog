@@ -84,3 +84,16 @@ def delete_post(request, post_id):
     post = Post.objects.get(pk=post_id)
     post.delete()
     return redirect('posts')
+
+
+def delete_category(request):
+    """Delete a category"""
+    if request.method != 'POST':
+        categories = Category.objects.all()
+    else:
+        # received form data
+        category = Category.objects.get(pk=request.POST['category'])
+        category.delete()
+        return redirect('categories')
+    context = {"categories": categories}
+    return render(request, 'blog/delete_category.html', context)
