@@ -1,0 +1,87 @@
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        {% block title %}
+            My blog
+        {% endblock %}
+    </title>
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">My Blog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                <a class="nav-link" href="">Home</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'post_list' %}">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'category_list' %}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact:contact' %}">Contact</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'post_create' %}">Write</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:login' %}">Login</a>
+                </li>
+                {% endif %}
+
+            </ul>
+            {% if user.is_authenticated %}
+            <span class="navbar-text">
+                {{ user.username }}
+            </span>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div>
+        {% bootstrap_messages %}
+    </div>
+    {% endif %}
+    
+    <header class="mt-2 mx-2">
+        {% block header %}
+        {% endblock %}
+    </header>
+    
+    <main class="container mx-auto">
+        <div class="row">
+            <div class="col">
+            {% block content %}
+            {% endblock content %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="mx-2">
+        <p>My blog</p>
+    </footer>
+
+</body>
+
+</html>

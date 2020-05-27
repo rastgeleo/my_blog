@@ -19,7 +19,8 @@ from . import views
 
 urlpatterns = [
     path('', include('blog.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('contact/', include('contact.urls')),
+    path('accounts/', include('user.urls')),
     path('admin/', admin.site.urls),
     path('', views.redirect_root),
 ]

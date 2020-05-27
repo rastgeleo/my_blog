@@ -1,7 +1,11 @@
-{% extends "blog/base.html" %}
+{% extends "blog/base_blog.html" %}
 
 {% block title %}
 {{ block.super }} - Post List
+{% endblock %}
+
+{% block header %}
+<h3>Blog Posts</h3>
 {% endblock %}
 
 {% block content %}
@@ -11,8 +15,10 @@
         <header>
             <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
             <p class="small">{{ post.pub_date }}</p>
-            <p><a href="{{ post.get_update_url }}">Edit</a></p>
-            <p><a href="{{ post.get_delete_url }}">Delete</a></p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="{{ post.get_update_url }}">Edit</a></li>
+                <li class="list-inline-item"><a href="{{ post.get_delete_url }}">Delete</a></li>
+            </ul>
         </header>
         
         <p>{{ post.content|truncatewords:30 }}</p>

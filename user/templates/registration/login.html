@@ -1,9 +1,16 @@
-{% extends "blog/base.html" %}
+{% extends "registration/base_user.html" %}
 {% load bootstrap4 %}
+
+{% block title %}
+{{ block.super }} - Login
+{% endblock %}
+
+{% block header %}
+<h3>Login</h3>
+{% endblock %}
 
 {% block content %}
 <div>
-
     {% if next %}
     {% if user.is_authenticated %}
     <p>Your account doesn't have access to this page. To proceed,
@@ -13,26 +20,13 @@
     {% endif %}
     {% endif %}
 
-    <form method="post" action="{% url 'login' %}" class="form">
+    <form method="post" action="{% url 'user:login' %}" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <!--
-        <table>
-            <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
-            </tr>
-        </table>
-        -->
         {% buttons %}
         <input type="submit" value="Login" , class="btn btn-primary">
         {% endbuttons %}
         <input type="hidden" name="next" value="{{ next }}">
     </form>
-
 </div>
 {% endblock content %}

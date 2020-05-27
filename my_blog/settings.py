@@ -34,6 +34,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # My apps
     'blog',
+    'contact',
+    'user',
     # Third-party apps
     'bootstrap4',
     'django_extensions',
@@ -125,3 +127,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Email setting
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SERVER_EMAIL = 'contact@archie.com'
+DEFAULT_FROM_EMAIL = 'no-reply@archie.com'
+EMAIL_SUBJECT_PREFIX = 'From Archie -'
+MANAGERS = (
+    ('Us', 'manager1@archie.com'),
+)
+
+# Auth Setting
+LOGIN_REDIRECT_URL = 'post_list'

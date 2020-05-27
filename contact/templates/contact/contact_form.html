@@ -1,28 +1,27 @@
-{% extends "blog/base_blog.html" %}
+{% extends "contact/base_contact.html" %}
 {% load bootstrap4 %}
 
 {% block title %}
-{{ block.super }} - Create New Category
+{{ block.super }} - Contact
 {% endblock %}
 
 {% block header %}
-<h3>Create New Category</h3>
+<h3>Contact</h3>
 {% endblock %}
 
 {% block content %}
 <div>
     <div>
         {% bootstrap_messages %}
-        <form action="{% url 'category_create' %}" method="post" class="form">
+        <form action="{% url 'contact:contact' %}" method="post" class="form">
             {% csrf_token %}
             {% bootstrap_form form %}
             {% buttons %}
             <button type="submit" class="btn btn-primary">
-            Create New Category
+                Send
             </button>
-        {% endbuttons %}
+            {% endbuttons %}
         </form>
     </div>
 </div>
-
-{% endblock content%}
+{% endblock %}
