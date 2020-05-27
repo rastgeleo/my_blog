@@ -1,0 +1,26 @@
+{% extends "blog/base.html" %}
+
+{% block title %}
+{{ block.super }} - Post List
+{% endblock %}
+
+{% block content %}
+
+{% for post in post_list %}
+    <article class="mb-4">
+        <header>
+            <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+            <p class="small">{{ post.pub_date }}</p>
+            <p><a href="{{ post.get_update_url }}">Edit</a></p>
+            <p><a href="{{ post.get_delete_url }}">Delete</a></p>
+        </header>
+        
+        <p>{{ post.content|truncatewords:30 }}</p>
+        <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-muted">Read more</a>
+    
+    </article>
+    {% empty %}
+    <p>There is no post to show.</p>
+{% endfor %}
+
+{% endblock content%}

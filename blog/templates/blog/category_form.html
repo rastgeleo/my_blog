@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}
+{{ block.super }} - Create New Category
+{% endblock %}
+
+{% block header %}
+<h3>Create New Category</h3>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        {% bootstrap_messages %}
+        <form action="{% url 'category_create' %}" method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">
+            Create New Category
+            </button>
+        {% endbuttons %}
+        </form>
+    </div>
+</div>
+
+{% endblock content%}

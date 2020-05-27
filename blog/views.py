@@ -1,99 +1,159 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import View
 
 from .models import Post, Category
 from .forms import PostForm, CategoryForm
+from .utils import ObjectCreateMixin
 
 
 def index(request):
     return render(request, 'blog/index.html')
 
 
-def posts(request, category_id=None):
+def post_list(request):
     """Show all blog posts"""
-    if category_id:
-        posts = Post.objects.filter(
-            category_id=category_id
-            ).order_by('-date_added')
-    else:
-        posts = Post.objects.all().order_by('-date_added')
-    context = {'posts': posts}
-    return render(request, 'blog/posts.html', context)
+    context = {'post_list': Post.objects.all()}
+    return render(request, 'blog/post_list.html', context)
 
 
-def post(request, post_id):
+def post_detail(request, year, month, slug):
     """Detail view for a post"""
-    post = Post.objects.get(pk=post_id)
+    post = get_object_or_404(
+        Post,
+        pub_date__year=year,
+        pub_date__month=month,
+        slug__iexact=slug
+    )
     context = {'post': post}
-    return render(request, 'blog/post.html', context)
+    return render(request, 'blog/post_detail.html', context)
 
 
-def categories(request):
+class PostCreate(ObjectCreateMixin, View):
+
+    form_class = PostForm
+    template_name = "blog/post_form.html"
+
+
+class PostUpdate(View):
+
+    form_class = PostForm
+    model = Post
+    template_name = "blog/post_form_update.html"
+
+    def get(self, request, year, month, slug):
+        post = self.get_object(year, month, slug)
+        form = self.form_class(instance=post)
+        context = {'form': form, 'post': post}
+        return render(request, self.template_name, context)
+
+    def post(self, request, year, month, slug):
+        post = self.get_object(year, month, slug)
+        bound_form = self.form_class(request.POST, instance=post)
+        if bound_form.is_valid():
+            new_post = bound_form.save()
+            return redirect(new_post)
+        else:
+            context = {'form': bound_form, 'post': post}
+            return render(request, self.template_name, context)
+
+    def get_object(self, year, month, slug):
+        return get_object_or_404(
+            self.model,
+            pub_date__year=year,
+            pub_date__month=month,
+            slug__iexact=slug
+        )
+
+
+class PostDelete(View):
+
+    model = Post
+    template_name = "blog/post_confirm_delete.html"
+
+    def get(self, request, year, month, slug):
+        post = self.get_object(year, month, slug)
+        return render(request, self.template_name, {'post': post})
+
+    def post(self, request, year, month, slug):
+        post = self.get_object(year, month, slug)
+        post.delete()
+        return redirect('post_list')
+
+    def get_object(self, year, month, slug):
+        return get_object_or_404(
+            self.model,
+            pub_date__year=year,
+            pub_date__month=month,
+            slug__iexact=slug
+        )
+
+
+def category_list(request):
     """Show all categories"""
-    categories = Category.objects.all()
-    context = {'categories': categories}
-    return render(request, 'blog/categories.html', context)
+    context = {'category_list': Category.objects.all()}
+    return render(request, 'blog/category_list.html', context)
 
 
-@login_required
-def new_post(request):
-    """view to add a new post"""
-    if request.method != 'POST':
-        form = PostForm()
-    else:
-        form = PostForm(data=request.POST)
-        if form.is_valid():
-            new_post = form.save()
-            return redirect('post', post_id=new_post.id)
-    context = {'form': form}
-    return render(request, 'blog/new_post.html', context)
+def category_detail(request, slug):
+    category = get_object_or_404(
+        Category,
+        slug__iexact=slug
+    )
+    context = {'category': category}
+    return render(request, 'blog/category_detail.html', context)
 
 
-@login_required
-def new_category(request):
-    """view to add a new category"""
-    if request.method != 'POST':
-        form = CategoryForm()
-    else:
-        form = CategoryForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('categories')
-    context = {'form': form}
-    return render(request, 'blog/new_category.html', context)
+class CategoryCreate(ObjectCreateMixin, View):
+
+    form_class = CategoryForm
+    template_name = "blog/category_form.html"
 
 
-@login_required
-def edit_post(request, post_id):
-    """Edit an existing post"""
-    post = Post.objects.get(pk=post_id)
-    if request.method != 'POST':
-        form = PostForm(instance=post)
-    else:
-        form = PostForm(instance=post, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('post', post_id=post.id)
-    context = {'form': form, 'post': post}
-    return render(request, 'blog/edit_post.html', context)
+class CategoryUpdate(View):
+
+    form_class = CategoryForm
+    model = Category
+    template_name = "blog/category_form_update.html"
+
+    def get(self, request, slug):
+        category = self.get_object(slug)
+        form = self.form_class(instance=category)
+        context = {'form': form, 'category': category}
+        return render(request, self.template_name, context)
+
+    def post(self, request, slug):
+        category = self.get_object(slug)
+        bound_form = self.form_class(request.POST, instance=category)
+        if bound_form.is_valid():
+            new_category = bound_form.save()
+            return redirect(new_category)
+        else:
+            context = {'form': bound_form, 'category': category}
+            return render(request, self.template_name, context)
+
+    def get_object(self, slug):
+        return get_object_or_404(
+            self.model,
+            slug__iexact=slug
+        )
 
 
-@login_required
-def delete_post(request, post_id):
-    """Delete a post"""
-    post = Post.objects.get(pk=post_id)
-    post.delete()
-    return redirect('posts')
+class CategoryDelete(View):
 
+    model = Category
+    template_name = "blog/category_confirm_delete.html"
 
-def delete_category(request):
-    """Delete a category"""
-    if request.method != 'POST':
-        categories = Category.objects.all()
-    else:
-        # received form data
-        category = Category.objects.get(pk=request.POST['category'])
-        category.delete()
-        return redirect('categories')
-    context = {"categories": categories}
-    return render(request, 'blog/delete_category.html', context)
+    def get(self, request, slug):
+        category = self.get_object(slug)
+        return render(request, self.template_name, {'category': category})
+
+    def post(self, request, slug):
+        cateogry = self.get_object(slug)
+        cateogry.delete()
+        return redirect('category_list')
+
+    def get_object(self, slug):
+        return get_object_or_404(
+            self.model,
+            slug__iexact=slug
+        )

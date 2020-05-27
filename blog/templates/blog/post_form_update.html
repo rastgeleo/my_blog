@@ -1,0 +1,25 @@
+{% extends "blog/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}
+{{ block.super }} - Edit Blog Post
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        {% bootstrap_messages %}
+
+        <form action="{{ post.get_update_url }}" method="post" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Save Changes
+            </button>
+            {% endbuttons %}
+
+        </form>
+    </div>
+</div>
+{% endblock content%}
