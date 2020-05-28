@@ -58,27 +58,28 @@
         </div>
     </nav>
 
-    {% if messages %}
-    <div>
-        {% bootstrap_messages %}
-    </div>
-    {% endif %}
-    
-    <header class="mt-2 mx-2">
-        {% block header %}
-        {% endblock %}
-    </header>
-    
-    <main class="container mx-auto">
+    <div class="container">
+        
+        {% if messages %}
         <div class="row">
-            <div class="col">
+            {% bootstrap_messages %}
+        </div>
+        {% endif %}
+        
+        <header class="row my-2">
+            <div>
+            {% block header %}
+            {% endblock %}
+            </div>
+        </header>
+        
+        <main>
             {% block content %}
             {% endblock content %}
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <footer class="mx-2">
+    <footer class="container mx-2">
         <p>My blog</p>
     </footer>
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .models import Post, Category
 from .forms import PostForm, CategoryForm
@@ -14,6 +15,53 @@ def post_list(request):
     """Show all blog posts"""
     context = {'post_list': Post.objects.all()}
     return render(request, 'blog/post_list.html', context)
+
+
+class PostList(View):
+    template_name = "blog/post_list.html"
+    model = Post
+    first_page_num = 1
+    paginate_by = 3
+    url_kwd = 'page'
+
+    def get(self, request):
+        page = request.GET.get('page', self.first_page_num)
+        paginator = Paginator(self.model.objects.all(), self.paginate_by)
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            page_obj = paginator.page(self.first_page_num)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        if page_obj.has_previous():
+            first_url = '?{}={}'.format(self.url_kwd, self.first_page_num)
+            previous_url = '?{}={}'.format(
+                self.url_kwd,
+                page_obj.previous_page_number())
+        else:
+            first_url = None
+            previous_url = None
+
+        if page_obj.has_next():
+            next_url = '?{}={}'.format(
+                self.url_kwd,
+                page_obj.next_page_number())
+            last_url = '?{}={}'.format(self.url_kwd, paginator.num_pages)
+        else:
+            next_url = None
+            last_url = None
+
+        context = {
+            'post_list': page_obj,
+            'paginator': paginator,
+            'is_paginated': page_obj.has_other_pages(),
+            'first_url': first_url,
+            'previous_url': previous_url,
+            'next_url': next_url,
+            'last_url': last_url,
+            }
+        return render(request, self.template_name, context)
 
 
 def post_detail(request, year, month, slug):

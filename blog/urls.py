@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     # URLs for blog post
-    path('blog/', views.post_list, name='post_list'),
+    path('blog/', views.PostList.as_view(), name='post_list'),
     path(
         'blog/<int:year>/<int:month>/<str:slug>',
         views.post_detail,
@@ -21,6 +21,9 @@ urlpatterns = [
         views.PostDelete.as_view(),
         name="post_delete"
     ),
+]
+
+urlpatterns += [
     # URLs for category
     path('category/', views.category_list, name='category_list'),
     path('category/<str:slug>', views.category_detail, name='category_detail'),
@@ -38,5 +41,5 @@ urlpatterns = [
         'category/<str:slug>/delete',
         views.CategoryDelete.as_view(),
         name="category_delete"
-    )
+    ),
 ]
