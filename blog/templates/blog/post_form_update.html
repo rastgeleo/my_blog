@@ -5,9 +5,9 @@
 {{ block.super }} - Edit Blog Post
 {% endblock %}
 
-{% block blog_content %}
-<div>
-    <div>
+{% block content %}
+<div class="row justify-content-sm-center">
+    <div class="col-8">
         {% bootstrap_messages %}
 
         <form action="{{ post.get_update_url }}" method="post" class="form">

@@ -5,29 +5,37 @@
 {{ block.super }} - Category
 {% endblock %}
 
-{% block header %}
-<h3>Category: {{ category.title|title }}</h3>
-{% endblock %}
-
-{% block blog_content %}
-<p>Total {{ category.post_set.all.count }} blog post{{ category.post_set.all.count|pluralize }}. </p>
-<ul class="list-inline">
-    <li class="list-inline-item"><a href="{{ category.get_update_url }}">Edit Category</a></li>
-    <li class="list-inline-item"><a href="{{ category.get_delete_url }}">Delete Category</a></li>
-</ul>
-{% for post in category.post_set.all %}
-    <article class="mb-4">
-        <header>
-            <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-            <p class="small">{{ post.pub_date }}</p>
-        </header>
-        
-        <p>{{ post.content|truncatewords:30 }}</p>
-        <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-muted">Read more</a>
-    
-    </article>
-    {% empty %}
-    <p>There is no post to show.</p>
-{% endfor %}
-
+{% block content %}
+<div class="row justify-content-sm-center">
+    <div class="col-8">
+        <h3>Category: {{ category.title|title }}</h3>
+        <p>Total {{ category.post_set.all.count }} blog post{{ category.post_set.all.count|pluralize }}. </p>
+        <div class="row">
+            <div class="col">
+                {% for post in category.post_set.all %}
+                        <article class="mb-5">
+                            <header>
+                                <h3 class="card-title">{{ post.title }}</a></h3>
+                                <p class="mb-0">Written on {{ post.pub_date|date:'l, jS N, Y' }}</p>
+                                <ul class="list-inline">
+                                    <li class="list-inline-item"><a href="{{ post.get_update_url }}">Edit</a></li>
+                                    <li class="list-inline-item"><a href="{{ post.get_delete_url }}">Delete</a></li>
+                                </ul>
+                            </header>
+                            <p>{{ post.content|truncatewords:30 }}</p>
+                            <a href="{{ post.get_absolute_url }}" class="text-decoration-none">Read more</a>
+                        </article>
+                    {% empty %}
+                    <p>There is no post to show.</p>
+                {% endfor %}
+            </div>
+            <div class="col-sm-4">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="{{ category.get_update_url }}">Edit Category</a></li>
+                    <li class="list-group-item" ><a href="{{ category.get_delete_url }}">Delete Category</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

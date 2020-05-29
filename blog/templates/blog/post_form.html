@@ -9,9 +9,9 @@
 <h3>Write New Blog Post</h3>
 {% endblock %}
 
-{% block blog_content %}
-<div>
-    <div>
+{% block content %}
+<div class="row justify-content-sm-center">
+    <div class="col-sm-8">
         {% bootstrap_messages %}
 
         <form action="{% url 'post_create' %}" method="post" class="form">

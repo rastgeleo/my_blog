@@ -4,21 +4,22 @@
 {{ block.super }} - Category List
 {% endblock %}
 
-{% block header %}
-<h3>Categories</h3>
-{% endblock %}
 
-{% block blog_content %}
-<ul>
-    <li><a href="{% url 'category_create' %}">New Category</a></li>
-</ul>
+{% block content %}
+<div class="row justify-content-sm-center">
+    <div class="col-4">
+        <ul class="list-unstyled text-center">
+            {% for category in category_list %}
+            <li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
+            {% empty %}
+            <li>There is no category to show.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-3 text-right" >
+        <a class="btn btn-light" href="{% url 'category_create' %}">Add New Category</a>
+    </div>
+</div>
 
-<ul class="list-unstyled">
-    {% for category in category_list %}
-    <li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
-    {% empty %}
-    <li>There is no category to show.</li>
-    {% endfor %}
-    
-</ul>
+
 {% endblock %}

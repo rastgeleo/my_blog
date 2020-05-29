@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('', include('blog.urls')),
     path('contact/', include('contact.urls')),
     path('accounts/', include('user.urls')),
     path('admin/', admin.site.urls),
-    path('', views.redirect_root),
+    path('', RedirectView.as_view(pattern_name='post_list')),
 ]

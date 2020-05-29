@@ -6,19 +6,30 @@
 {% endblock %}
 
 
-{% block blog_content %}
-<article>
-    <header>
-        <h3>{{ post.title }}</h3>
-        <p>{{ post.pub_date|date:"l, F j Y"}}</p>
-        <p>Category: {{ post.category.title }}</p>
-        <ul>
-            <li><a href="{{ post.get_update_url }}">Edit</a></li>
-            <li><a href="{{ post.get_delete_url }}">Delete</a></li>
-        </ul>
-    </header>
-    
-    {{ post.content|linebreaks }}
+{% block content %}
+<div class="row justify-content-sm-center">
+    <div class="col-sm-8">
+        <article>
+            <header>   
+                <h3>{{ post.title }}</h3>
+                    <p class="text-right"><date>{{ post.pub_date|date:'l, jS N, Y' }}</date></p>
+            </header>
+            
+            {{ post.content|linebreaks }}
 
-</article>
+            <footer class="row">
+                <div class="col">
+                    <p>Category: <a href="{{ post.category.get_absolute_url }}">{{ post.category.title }}</a></p>
+                </div>
+                <div class="col">
+                    <ul class="list-inline text-right">
+                        <li class="list-inline-item"><a href="{{ post.get_update_url }}">Edit</a></li>
+                        <li class="list-inline-item"><a href="{{ post.get_delete_url }}">Delete</a></li>
+                    </ul>
+                </div>
+            </footer>
+        
+        </article>
+    </div>
+</div>
 {% endblock %}
